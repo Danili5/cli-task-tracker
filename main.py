@@ -1,44 +1,94 @@
 import json
 import pathlib
 
-path = pathlib.Path(__file__).parent / "data.json"
-tasks = {}
+class Logic:
+    def __init__(self):
+        self.path = pathlib.Path(__file__).parent / "data.json"
+        self.tasks = None
 
-def read():
-    try:
-        with open(path, "r") as file_to_read:
-            return json.load(file_to_read)
-    except FileNotFoundError:
-        print("invalid file path", "creating a new empty json file: 'data.json'")
-        return {}
+        try:
+            with open(self.path, "r") as file_to_read:
+                self.tasks = json.load(file_to_read)
+        except FileNotFoundError:
+            print("invalid file path", "creating a new empty json file: 'data.json'")
+            self.tasks = {}
 
-def write():
-    with open(path, "w") as file_to_write:
-        json.dump(tasks, file_to_write, indent = 4)
+    def add(self, task_name):
+        self.tasks[task_name] = {"status": "in-progress"}
 
-tasks = read()
+        self._id()
+        self._write()
 
-print("CLI Task Tracker")
+    def update(self):
+        pass
+    
+    def delete(self):
+        pass
 
+    def _id(self):
+        for index, key in enumerate(self.tasks):
+            self.tasks[key].update({"id": index})
 
-while True:
-    command = input("command: ").lower()
+    def _write(self):
+        with open(self.path, "w") as file_to_write:
+            json.dump(self.tasks, file_to_write, indent = 4)
 
-    if command == "exit":
-        print("Exiting")
-        break
-    elif command == "show":
-        print("Tasks")
-        print(tasks)
-    elif command == "add":
-        print("New Task")
+    def _search_task(self, task_name_search):
+        for task_name in self.tasks.keys():
+            if task_name_search == task_name:
+                print("found task", task_name) 
 
-        new_task = input("name: ")
+class CLI:
+    def __init__(self):
+        print("Welcome to Task Tracker CLI")
+        print("Command Menu\nadd\nupdate\ndelete\nexit")
 
-        if new_task == "":
-            continue
-        else:
-            tasks[new_task] = "in progress"
-            write()
-    else:
-        print("Did not understand the command. Try again.")
+        valid_inputs = ["add", "update", "remove", "exit"]
+
+        while True:
+            command_input = input("command input: ").lower()
+            
+            valid = None
+
+            for valid_input in valid_inputs:
+                if command_input == valid_input:
+                    valid = True
+                    break
+                
+                valid = False
+                
+            if valid:   
+                task_name = input("task name: ")
+                
+                if command_input == "add":
+                    logic.add(task_name)
+                elif command_input == "update":
+                    self._search_task(task_name)
+                elif command_input == "exit":
+                    break
+            else:
+                print("invalid input try again")
+
+logic = Logic()
+cli = CLI()
+
+# Add, Update, and Delete tasks
+# Mark a task as in progress or done
+# List all tasks
+# List all tasks that are done
+# List all tasks that are not done
+# List all tasks that are in progress
+
+# path = pathlib.Path(__file__).parent / "data.json"
+# tasks = {}
+
+# def read():
+    
+
+# def write():
+#     with open(path, "w") as file_to_write:
+#         json.dump(tasks, file_to_write, indent = 4)
+
+# tasks = read()
+
+# print("CLI Task Tracker\ncommands:\nexit\nshow\nadd\nupdate")
