@@ -14,5 +14,13 @@
     "read": {
         "status": "in-progress",
         "id": 3
+    },
+    "sleep": {
+        "status": "in-progress",
+        "id": 4
+    },
+    "plan": {
+        "status": "in-progress",
+        "id": 5
     }
 }

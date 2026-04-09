@@ -36,7 +36,9 @@ class Logic:
     def _search_task(self, task_name_search):
         for task_name in self.tasks.keys():
             if task_name_search == task_name:
-                print("found task", task_name) 
+                return task_name
+
+        return
 
 class CLI:
     def __init__(self):
@@ -50,20 +52,21 @@ class CLI:
             
             valid = None
 
-            for valid_input in valid_inputs:
-                if command_input == valid_input:
-                    valid = True
-                    break
-                
-                valid = False
+            if any(command in command_input for command in valid_inputs):
+                valid = True
                 
             if valid:   
-                task_name = input("task name: ")
+                user_input = None
+
+                if any(command in command_input for command in ["add"]):
+                    user_input = input("Enter the task name: ")
+                else:
+                    user_input = input("Enter the task ID: ")
                 
                 if command_input == "add":
-                    logic.add(task_name)
+                    logic.add(user_input)
                 elif command_input == "update":
-                    self._search_task(task_name)
+                    logic.update(logic._search_task(user_input))
                 elif command_input == "exit":
                     break
             else:
