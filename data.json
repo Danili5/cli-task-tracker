@@ -1,6 +1,6 @@
 {
     "study": {
-        "status": "in-progress",
+        "status": "done",
         "id": 0
     },
     "work": {
@@ -20,7 +20,7 @@
         "id": 4
     },
     "plan": {
-        "status": "in-progress",
+        "status": "done",
         "id": 5
     }
 }
