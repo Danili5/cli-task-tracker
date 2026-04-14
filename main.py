@@ -63,12 +63,16 @@ class Logic:
 class CLI:
     def __init__(self):
         print("Welcome to Task Tracker CLI")
-        print("Command Menu\nadd\nupdate\ndelete\nexit:")
+        print("Command Menu:\nadd\nupdate\ndelete\nexit")
 
         valid_inputs = ["add", "update", "remove", "exit"]
 
         while True:
             command_input = input("command input: ").lower()
+
+            if command_input == "exit":
+                print("exiting the Task Tracker CLI")
+                break
             
             valid = None
 
@@ -80,17 +84,23 @@ class CLI:
 
                 if any(command in command_input for command in ["add"]):
                     user_input = input("Enter the task name: ")
+
+                    self._commands(user_input, command_input)
                 else:
-                    user_input = int(input("Enter the task ID: "))
-                
-                if command_input == "add":
-                    logic.add(user_input)
-                elif command_input == "update":
-                    logic.update(user_input)
-                elif command_input == "exit":
-                    break
+                    try:
+                        user_input = int(input("Enter the task ID: "))
+
+                        self._commands(user_input, command_input)
+                    except ValueError:
+                        print("invalid input try again")   
             else:
                 print("invalid input try again")
+
+    def _commands(self, user_input, command_input):
+        if command_input == "add":
+            logic.add(user_input)
+        elif command_input == "update":
+            logic.update(user_input) 
 
 logic = Logic()
 cli = CLI()
