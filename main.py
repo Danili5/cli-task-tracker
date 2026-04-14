@@ -19,7 +19,7 @@ class Logic:
         self._write()
 
     def update(self, task_id): 
-        valid_update_inputs = ["d","i"]
+        valid_update_inputs = ["done", "in-progress", "back"]
 
         for task_name, task_info in self.tasks.items():
             if task_id == task_info["id"]:
@@ -29,16 +29,20 @@ class Logic:
                     status = input("Enter status: ")
 
                     if any(command in status for command in valid_update_inputs):
-                            if status != task_info["status"]:
-                                task_info.update({"status": status})
-                                self._write()
-                                return
-                            else:
-                                print(f"the status of {task_name} is already {status}")
+                        if status == "back":
+                            print("redirecting to the main menu")
+                            return
+
+                        if status != task_info["status"]:
+                            task_info.update({"status": status})
+                            self._write()
+                            return
+                        else:
+                            print(f"the status of {task_name} is already {status} please try again")
                     else:
                         print("task not found try again")
             
-        print("task not found")
+        print("task not found redirecting to the main menu")
     
     def delete(self):
         pass
