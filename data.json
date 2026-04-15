@@ -1,26 +1,22 @@
 {
-    "study": {
-        "status": "done",
-        "id": 0
-    },
     "work": {
         "status": "in-progress",
-        "id": 1
+        "id": 0
     },
     "eat": {
         "status": "in-progress",
-        "id": 2
-    },
-    "read": {
-        "status": "in-progress",
-        "id": 3
+        "id": 1
     },
     "sleep": {
         "status": "in-progress",
-        "id": 4
+        "id": 2
     },
     "plan": {
         "status": "done",
-        "id": 5
+        "id": 3
+    },
+    "study": {
+        "status": "in-progress",
+        "id": 4
     }
 }

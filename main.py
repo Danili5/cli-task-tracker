@@ -13,6 +13,15 @@ class Logic:
             print("invalid file path", "creating a new empty json file: 'data.json'")
 
     def add(self, task_name):
+        counter = 0
+ 
+        for task_key, task_info in self.tasks.items():
+            if task_key == task_name:
+                counter += 1
+
+        if counter > 0:
+            task_name = task_name + f" ({counter})"
+
         self.tasks[task_name] = {"status": "in-progress"}
 
         self._id()
@@ -44,8 +53,23 @@ class Logic:
             
         print("task not found redirecting to the main menu")
     
-    def delete(self):
-        pass
+    def delete(self, task_id):
+        for task_name, task_info in self.tasks.items():
+            if task_id == task_info["id"]:
+                while True:
+                    confirmation = input(f"delete task (yes / no) {task_name}? ")
+
+                    if confirmation == "yes":
+                        self.tasks.pop(task_name)
+                        self._write()
+                        return
+                    elif confirmation == "no":
+                        return
+                    else:
+                        print("invalid input please try againn")
+
+        print("task not found")
+        return
 
     def _id(self):
         for index, key in enumerate(self.tasks):
@@ -65,7 +89,7 @@ class CLI:
         print("Welcome to Task Tracker CLI")
         print("Command Menu:\nadd\nupdate\ndelete\nexit")
 
-        valid_inputs = ["add", "update", "remove", "exit"]
+        valid_inputs = ["add", "update", "delete", "exit"]
 
         while True:
             command_input = input("command input: ").lower()
@@ -100,7 +124,9 @@ class CLI:
         if command_input == "add":
             logic.add(user_input)
         elif command_input == "update":
-            logic.update(user_input) 
+            logic.update(user_input)
+        elif command_input == "delete":
+            logic.delete(user_input)
 
 logic = Logic()
 cli = CLI()
