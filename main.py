@@ -15,6 +15,7 @@ class Logic:
     def add(self, task_name):
         counter = 0
  
+        # needs a better approach
         for task_key, task_info in self.tasks.items():
             if task_key == task_name:
                 counter += 1
