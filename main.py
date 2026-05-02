@@ -7,50 +7,51 @@ class Logic:
         self.tasks = {}
 
         try:
-            with open(self.path, "r") as file_to_read:
+            with open(self.path, "r") as file_to_read:  
                 self.tasks = json.load(file_to_read)
         except FileNotFoundError:
             print("invalid file path", "creating a new empty json file: 'data.json'")
+        else:
+            print("loaded data.json")
 
     def add(self, task_name):
-        counter = 0
- 
-        # needs a better approach
-        for task_key, task_info in self.tasks.items():
-            if task_key == task_name:
-                counter += 1
+        for key in self.tasks.keys():
+            if task_name == key:
+                self.tasks[task_name].append({"status": "in-progress"})
 
-        if counter > 0:
-            task_name = task_name + f" ({counter})"
+                self._write()
+                return
 
-        self.tasks[task_name] = {"status": "in-progress"}
+        self.tasks[task_name] = list()
+        self.tasks[task_name].append({"status": "in-progress"})
 
-        self._id()
         self._write()
 
-    def update(self, task_id): 
-        valid_update_inputs = ["done", "in-progress", "back"]
+    def update(self, task_name): 
+        valid_update_inputs = ["done", "in-progress", "back", "rename"]
 
         for task_name, task_info in self.tasks.items():
-            if task_id == task_info["id"]:
-                print("Update Command Menu:\ndone\nin-progress\nback")
+            print(task_name, task_info)
 
-                while True:
-                    status = input("Enter status: ")
+            # if task_id == task_info["id"]:
+            #     print("Update Command Menu:\ndone\nin-progress\nback")
 
-                    if any(command in status for command in valid_update_inputs):
-                        if status == "back":
-                            print("redirecting to the main menu")
-                            return
+            #     while True:
+            #         status = input("Enter status: ")
 
-                        if status != task_info["status"]:
-                            task_info.update({"status": status})
-                            self._write()
-                            return
-                        else:
-                            print(f"the status of {task_name} is already {status} please try again")
-                    else:
-                        print("task not found try again")
+            #         if any(command in status for command in valid_update_inputs):
+            #             if status == "back":
+            #                 print("redirecting to the main menu")
+            #                 return
+
+            #             if status != task_info["status"]:
+            #                 task_info.update({"status": status})
+            #                 self._write()
+            #                 return
+            #             else:
+            #                 print(f"the status of {task_name} is already {status} please try again")
+            #         else:
+            #             print("task not found try again")
             
         print("task not found redirecting to the main menu")
     
@@ -72,9 +73,9 @@ class Logic:
         print("task not found")
         return
 
-    def _id(self):
-        for index, key in enumerate(self.tasks):
-            self.tasks[key].update({"id": index})
+    # def _id(self):
+    #     for index, key in enumerate(self.tasks): 
+    #         self.tasks[key].update({"id": index})
 
     def _write(self):
         with open(self.path, "w") as file_to_write:
@@ -87,39 +88,25 @@ class Logic:
 
 class CLI:
     def __init__(self):
-        print("Welcome to Task Tracker CLI")
-        print("Command Menu:\nadd\nupdate\ndelete\nexit")
+        valid_menu_inputs = ["add", "update", "delete", "search", "exit"]
 
-        valid_inputs = ["add", "update", "delete", "exit"]
+        print("Welcome to Task Tracker CLI")
+        print("Menu Inputs:", f", ".join(valid_menu_inputs))
 
         while True:
             command_input = input("command input: ").lower()
-
-            if command_input == "exit":
-                print("exiting the Task Tracker CLI")
-                break
             
-            valid = None
+            if any(command in command_input for command in valid_menu_inputs):                
+                    user_input = None
 
-            if any(command in command_input for command in valid_inputs):
-                valid = True
-                
-            if valid:   
-                user_input = None
-
-                if any(command in command_input for command in ["add"]):
-                    user_input = input("Enter the task name: ")
-
-                    self._commands(user_input, command_input)
-                else:
-                    try:
-                        user_input = int(input("Enter the task ID: "))
+                    if any(command in command_input for command in ["add"]):
+                        user_input = input("enter the task name: ")
 
                         self._commands(user_input, command_input)
-                    except ValueError:
-                        print("invalid input try again")   
+                    else:
+                        self._commands(user_input, command_input)
             else:
-                print("invalid input try again")
+                print("invalid menu input try again")
 
     def _commands(self, user_input, command_input):
         if command_input == "add":
@@ -128,6 +115,9 @@ class CLI:
             logic.update(user_input)
         elif command_input == "delete":
             logic.delete(user_input)
+        elif command_input == "exit":
+            print("exiting the task tracker")
+            return
 
 logic = Logic()
 cli = CLI()
