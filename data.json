@@ -1,8 +1,24 @@
 {
-    "sleep": [
+    "study": [
         {
             "status": "in-progress"
         },
+        {
+            "status": "in-progress"
+        },
+        {
+            "status": "in-progress"
+        },
+        {
+            "status": "in-progress"
+        }
+    ],
+    "eat": [
+        {
+            "status": "in-progress"
+        }
+    ],
+    "cook": [
         {
             "status": "in-progress"
         }
