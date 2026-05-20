@@ -22,5 +22,10 @@
         {
             "status": "in-progress"
         }
+    ],
+    "read": [
+        {
+            "status": "done"
+        }
     ]
 }

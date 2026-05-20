@@ -23,7 +23,7 @@ class Logic:
             print("invalid file path", f"creating a new empty json file: {file_name}")
 
     def add(self, task_name):
-        status = {"status": "in-progress"}
+        status = {"status": "not done"}
 
         if task_name in self.tasks:
             self.tasks[task_name].append(status)
@@ -32,35 +32,35 @@ class Logic:
 
         self._write()
 
-    def update(self, task_name): 
-        print(task_name)
+    def _task_exists(self, task_name):
+        for task in self.tasks:
+            if task == task_name:
+                return True
 
-        # valid_update_inputs = ["done", "in-progress", "back", "rename"]
+        return False
 
-        # for task_name, task_info in self.tasks.items():
-        #     print(task_name, task_info)
+    def update(self, task_name):
+            if self._task_exists:
+                update_options = ["done", "not done", "in-progress"]
+                print("Update Options: ", " | ".join(update_options))
 
-        #     # if task_id == task_info["id"]:
-        #     #     print("Update Command Menu:\ndone\nin-progress\nback")
+                while True:
+                    input_command = input("update command: ").lower()
 
-        #     #     while True:
-        #     #         status = input("Enter status: ")
+                    if any(command == input_command for command in update_options):
+                        for task in self.tasks[task_name]:
+                            if task["status"] != input_command:
+                                task["status"] = input_command
 
-        #     #         if any(command in status for command in valid_update_inputs):
-        #     #             if status == "back":
-        #     #                 print("redirecting to the main menu")
-        #     #                 return
+                                self._write()
 
-        #     #             if status != task_info["status"]:
-        #     #                 task_info.update({"status": status})
-        #     #                 self._write()
-        #     #                 return
-        #     #             else:
-        #     #                 print(f"the status of {task_name} is already {status} please try again")
-        #     #         else:
-        #     #             print("task not found try again")
-            
-        # print("task not found redirecting to the main menu")
+                                break
+
+                        break
+                    else:
+                        print(f"{input_command} is unknown try again")
+            else:
+                print(f"{task_name} not found")
     
     def delete(self, task_name):
         print(task_name)
@@ -102,7 +102,7 @@ class CLI:
         print("Menu Options:", " | ".join(menu_options))
 
         while True:
-            input_command = input("command: ").lower()
+            input_command = input("menu command: ").lower()
             
             if any(command == input_command for command in menu_options):      
                 task_name = input("enter the task name: ")
@@ -114,6 +114,8 @@ class CLI:
                 break
             else:
                 print("invalid menu input try again")
+
+                continue
 
 logic = Logic()
 cli = CLI()
