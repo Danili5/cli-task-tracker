@@ -27,5 +27,13 @@
         {
             "status": "done"
         }
+    ],
+    "work": [
+        {
+            "status": "not done"
+        },
+        {
+            "status": "not done"
+        }
     ]
 }

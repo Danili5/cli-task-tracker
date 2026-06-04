@@ -3,18 +3,8 @@ import pathlib
 
 class Logic:
     def __init__(self):
-        self.path = None
-        self.tasks = None
-
-        file_name = input("filename: ")
-
-        if file_name == "":
-            file_name = None
-
-        if file_name is None:
-            self.path = pathlib.Path(__file__).parent / "data.json"
-        else:
-            self.path = pathlib.Path(__file__).parent / file_name
+        self.path = pathlib.Path(__file__).parent / "data.json"
+        self.tasks = {}
 
         try:
             with open(self.path, "r") as file_to_read:  
@@ -32,67 +22,34 @@ class Logic:
 
         self._write()
 
-    def _task_exists(self, task_name):
-        for task in self.tasks:
-            if task == task_name:
-                return True
-
-        return False
-
     def update(self, task_name):
-            if self._task_exists:
-                update_options = ["done", "not done", "in-progress"]
-                print("Update Options: ", " | ".join(update_options))
+        if task_name in self.tasks: 
+            update_options = ["done", "not done", "postpone", "exit"]
 
-                while True:
-                    input_command = input("update command: ").lower()
+            while True:
+                input_command = input("update menu: ").lower()
 
-                    if any(command == input_command for command in update_options):
+                if any(command == input_command for command in update_options):
+                    if input_command == "exit":
+                        return -1
+                    else:
                         for task in self.tasks[task_name]:
                             if task["status"] != input_command:
                                 task["status"] = input_command
-
                                 self._write()
-
-                                break
-
-                        break
-                    else:
-                        print(f"{input_command} is unknown try again")
-            else:
-                print(f"{task_name} not found")
-    
-    def delete(self, task_name):
-        print(task_name)
-
-        # for task_name, task_info in self.tasks.items():
-        #     if task_id == task_info["id"]:
-        #         while True:
-        #             confirmation = input(f"delete task (yes / no) {task_name}? ")
-
-        #             if confirmation == "yes":
-        #                 self.tasks.pop(task_name)
-        #                 self._write()
-        #                 return
-        #             elif confirmation == "no":
-        #                 return
-        #             else:
-        #                 print("invalid input please try againn")
-
-        # print("task not found")
-        # return
-
-    # def search(self, task_name):
-    #     print("search function")
+                                return True
+                            
+                            print(f"All tasks have the status {input_command}")
+                            return -1
+                else:
+                    print("unknown command try again")
+        else:
+            print('not found')
+            return -1
 
     def _write(self):
         with open(self.path, "w") as file_to_write:
             json.dump(self.tasks, file_to_write, indent = 4)
-
-    # def _search_task(self, task_id):
-    #     for task_name, task_info in self.tasks.items():
-    #         if task_id == task_info["id"]:
-    #             return True
 
 class CLI:
     def __init__(self):
