@@ -1,7 +1,7 @@
 {
     "study": [
         {
-            "status": "in-progress"
+            "status": "done"
         },
         {
             "status": "in-progress"
@@ -30,8 +30,13 @@
     ],
     "work": [
         {
-            "status": "not done"
+            "status": "done"
         },
+        {
+            "status": "not done"
+        }
+    ],
+    "hi": [
         {
             "status": "not done"
         }

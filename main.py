@@ -22,11 +22,15 @@ class Logic:
 
         self._write()
 
+    # requires debugging
     def update(self, task_name):
         if task_name in self.tasks: 
             update_options = ["done", "not done", "postpone", "exit"]
 
             while True:
+                print("Update Menu")
+                print(" | ".join(update_options))
+
                 input_command = input("update menu: ").lower()
 
                 if any(command == input_command for command in update_options):
@@ -56,9 +60,11 @@ class CLI:
         menu_options = ["add", "update", "delete", "search"]
 
         print("Welcome to Task Tracker CLI")
-        print("Menu Options:", " | ".join(menu_options))
 
         while True:
+            print("Main Menu")
+            print("Menu Options:", " | ".join(menu_options))
+            
             input_command = input("menu command: ").lower()
             
             if any(command == input_command for command in menu_options):      
