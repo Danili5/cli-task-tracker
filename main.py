@@ -4,6 +4,7 @@ import pathlib
 class Logic:
     def __init__(self):
         self.path = pathlib.Path(__file__).parent / "data.json"
+        self.update_menu = ["done", "in-progress", "exit"]
         self.tasks = {}
 
         try:
@@ -13,7 +14,7 @@ class Logic:
             print("invalid file path", f"creating a new empty json file: {file_name}")
 
     def add(self, task_name):
-        status = {"status": "not done"}
+        status = {"status": "in-progress"}
 
         if task_name in self.tasks:
             self.tasks[task_name].append(status)
@@ -22,33 +23,32 @@ class Logic:
 
         self._write()
 
-    # requires debugging
     def update(self, task_name):
         if task_name in self.tasks: 
-            update_options = ["done", "not done", "postpone", "exit"]
-
             while True:
                 print("Update Menu")
-                print(" | ".join(update_options))
+                print(" | ".join(self.update_menu))
 
-                input_command = input("update menu: ").lower()
+                update_command = input("update menu: ").lower()
 
-                if any(command == input_command for command in update_options):
-                    if input_command == "exit":
+                if any(command == update_command for command in self.update_menu):
+                    if update_command == "exit":
+                        print("exiting the update menu")
+
                         return -1
                     else:
                         for task in self.tasks[task_name]:
-                            if task["status"] != input_command:
-                                task["status"] = input_command
+                            if task["status"] != update_command:
+                                task["status"] = update_command
                                 self._write()
                                 return True
                             
-                            print(f"All tasks have the status {input_command}")
-                            return -1
+                        print(f"All tasks have the status {update_command}")
+                        return -1
                 else:
                     print("unknown command try again")
         else:
-            print('not found')
+            print('task not found')
             return -1
 
     def _write(self):
@@ -83,7 +83,7 @@ class CLI:
 logic = Logic()
 cli = CLI()
 
-# Add (completed), Update, and Delete tasks
+# Add (completed), Update (complete), and Delete tasks
 # Mark a task as in progress or done
 # List all tasks
 # List all tasks that are done

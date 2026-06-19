@@ -4,7 +4,10 @@
             "status": "done"
         },
         {
-            "status": "in-progress"
+            "status": "done"
+        },
+        {
+            "status": "done"
         },
         {
             "status": "in-progress"
@@ -15,7 +18,7 @@
     ],
     "eat": [
         {
-            "status": "in-progress"
+            "status": "done"
         }
     ],
     "cook": [
@@ -33,7 +36,7 @@
             "status": "done"
         },
         {
-            "status": "not done"
+            "status": "done"
         }
     ],
     "hi": [
