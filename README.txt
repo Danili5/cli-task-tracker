@@ -1,1 +1,1 @@
-CLI Task Tracker is a program that uses a json file to keep track of specificed tasks.
+CLI Task Tracker is contains a .env where the json file is, a seperate json file needs to be created to use this program anywhere else.
