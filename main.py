@@ -1,9 +1,17 @@
 import json
 import pathlib
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+data_file = os.getenv("DATA")
+
+print(data_file)
 
 class Logic:
     def __init__(self):
-        self.path = pathlib.Path(__file__).parent / "data.json"
+        self.path = pathlib.Path(__file__).parent.joinpath(data_file)
         self.update_menu = ["done", "in-progress", "exit"]
         self.tasks = {}
 
