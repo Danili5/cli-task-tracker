@@ -7,12 +7,10 @@ load_dotenv()
 
 data_file = os.getenv("DATA")
 
-print(data_file)
-
 class Logic:
     def __init__(self):
         self.path = pathlib.Path(__file__).parent.joinpath(data_file)
-        self.update_menu = ["done", "in-progress", "exit"]
+        self.statuses = ["done", "in-progress", "exit"]
         self.tasks = {}
 
         try:
@@ -31,15 +29,25 @@ class Logic:
 
         self._write()
 
+    def delete(self, task_name):
+        if task_name in self.tasks:
+            print(f"found task {task_name}")
+        else:
+            print(f"there is no task named {task_name}")
+
+    def _write(self):
+        with open(self.path, "w") as file_to_write:
+            json.dump(self.tasks, file_to_write, indent = 4)
+
     def update(self, task_name):
         if task_name in self.tasks: 
             while True:
                 print("Update Menu")
-                print(" | ".join(self.update_menu))
+                print(" | ".join(self.statuses))
 
                 update_command = input("update menu: ").lower()
 
-                if any(command == update_command for command in self.update_menu):
+                if any(command == update_command for command in self.statuses):
                     if update_command == "exit":
                         print("exiting the update menu")
 
@@ -59,13 +67,9 @@ class Logic:
             print('task not found')
             return -1
 
-    def _write(self):
-        with open(self.path, "w") as file_to_write:
-            json.dump(self.tasks, file_to_write, indent = 4)
-
 class CLI:
     def __init__(self):
-        menu_options = ["add", "update", "delete", "search"]
+        menu_options = ["add", "update", "delete", "search", "exit"]
 
         print("Welcome to Task Tracker CLI")
 
@@ -74,15 +78,16 @@ class CLI:
             print("Menu Options:", " | ".join(menu_options))
             
             input_command = input("menu command: ").lower()
+
+            if input_command == "exit":
+                print("exiting the app")
+
+                return
             
             if any(command == input_command for command in menu_options):      
                 task_name = input("enter the task name: ")
-          
+                
                 getattr(logic, input_command)(task_name)    
-            elif input_command == "exit":
-                print("exiting the app")
-
-                break
             else:
                 print("invalid menu input try again")
 
@@ -91,8 +96,9 @@ class CLI:
 logic = Logic()
 cli = CLI()
 
+# Objectives:
 # Add (completed), Update (complete), and Delete tasks
-# Mark a task as in progress or done
+# Mark a task as in progress or done (complete)
 # List all tasks
 # List all tasks that are done
 # List all tasks that are not done

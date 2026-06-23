@@ -11,9 +11,6 @@
         },
         {
             "status": "done"
-        },
-        {
-            "status": "in-progress"
         }
     ],
     "eat": [
@@ -33,7 +30,7 @@
     ],
     "work": [
         {
-            "status": "done"
+            "status": "in-progress"
         },
         {
             "status": "done"
@@ -45,6 +42,21 @@
         }
     ],
     "exit": [
+        {
+            "status": "in-progress"
+        }
+    ],
+    "chill": [
+        {
+            "status": "in-progress"
+        }
+    ],
+    "think": [
+        {
+            "status": "in-progress"
+        }
+    ],
+    "update": [
         {
             "status": "in-progress"
         }
