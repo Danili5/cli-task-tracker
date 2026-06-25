@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-database = os.getenv("DATA")
+database = os.getenv("DATABASE")
 
 class Logic:
     def __init__(self):
