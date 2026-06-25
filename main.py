@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-data_file = os.getenv("DATA")
+database = os.getenv("DATA")
 
 class Logic:
     def __init__(self):
-        self.path = pathlib.Path(__file__).parent.joinpath(data_file)
+        self.path = pathlib.Path(__file__).parent.joinpath(database)
         self.statuses = ["done", "in-progress", "exit"]
         self.tasks = {}
 
