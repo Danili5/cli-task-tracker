@@ -35,10 +35,6 @@ class Logic:
         else:
             print(f"there is no task named {task_name}")
 
-    def _write(self):
-        with open(self.path, "w") as file_to_write:
-            json.dump(self.tasks, file_to_write, indent = 4)
-
     def update(self, task_name):
         if task_name in self.tasks: 
             while True:
@@ -66,6 +62,10 @@ class Logic:
         else:
             print('task not found')
             return -1
+        
+    def _write(self):
+        with open(self.path, "w") as file_to_write:
+            json.dump(self.tasks, file_to_write, indent = 4)
 
 class CLI:
     def __init__(self):
