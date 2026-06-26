@@ -17,7 +17,7 @@ class Logic:
             with open(self.path, "r") as file_to_read:  
                 self.tasks = json.load(file_to_read)
         except FileNotFoundError:
-            print("invalid file path", f"creating a new empty json file: {file_name}")
+            print("invalid file path", f"creating a new empty json file")
 
     def add(self, task_name):
         status = {"status": "in-progress"}
@@ -27,7 +27,7 @@ class Logic:
         else:
             self.tasks[task_name] = [status]
 
-        self._write()
+        self._id()
 
     def delete(self, task_name):
         if task_name in self.tasks:
@@ -52,7 +52,7 @@ class Logic:
                         for task in self.tasks[task_name]:
                             if task["status"] != update_command:
                                 task["status"] = update_command
-                                self._write()
+                                self._id()
                                 return True
                             
                         print(f"All tasks have the status {update_command}")
@@ -62,6 +62,14 @@ class Logic:
         else:
             print('task not found')
             return -1
+
+    def _id(self):
+        for task_name, task_list in self.tasks.items():
+            for index, task in enumerate(task_list):
+                task["id"] = index + 1
+                print(index, task)
+
+        self._write()
         
     def _write(self):
         with open(self.path, "w") as file_to_write:
