@@ -52,7 +52,7 @@ class Logic:
                         for task in self.tasks[task_name]:
                             if task["status"] != update_command:
                                 task["status"] = update_command
-                                
+
                                 self._write()
                                 return True
                             
@@ -62,6 +62,7 @@ class Logic:
                     print("unknown command try again")
         else:
             print('task not found')
+            
             return -1
 
     def _id(self):
