@@ -52,7 +52,7 @@ class Logic:
                         for task in self.tasks[task_name]:
                             if task["status"] != update_command:
                                 task["status"] = update_command
-                                self._id()
+                                self._write()
                                 return True
                             
                         print(f"All tasks have the status {update_command}")
