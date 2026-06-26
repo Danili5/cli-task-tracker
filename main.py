@@ -52,6 +52,7 @@ class Logic:
                         for task in self.tasks[task_name]:
                             if task["status"] != update_command:
                                 task["status"] = update_command
+                                
                                 self._write()
                                 return True
                             
