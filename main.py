@@ -11,67 +11,63 @@ class Logic:
     def __init__(self):
         self.path = pathlib.Path(__file__).parent.joinpath(database)
         self.statuses = ["done", "in-progress", "exit"]
-        self.tasks = {}
+        self.tasks = dict()
 
         try:
             with open(self.path, "r") as file_to_read:  
                 self.tasks = json.load(file_to_read)
         except FileNotFoundError:
-            print("invalid file path", f"creating a new empty json file")
+            print("invalid file path", f"created a new empty json file")
 
-    def add(self, task_name):
-        status = {"status": "in-progress"}
+        if "tasks" not in self.tasks:
+            self.tasks["tasks"] = list()
 
-        if task_name in self.tasks:
-            self.tasks[task_name].append(status)
-        else:
-            self.tasks[task_name] = [status]
+    def add(self):
+        task_name = input("task name: ")
+        
+        self._setup()
+
+        self.tasks["tasks"].append({"name": task_name, "status": "in-progress"})
+
+        print(f"{task_name} was added to the task list")
 
         self._id()
 
-    def delete(self, task_name):
-        if task_name in self.tasks:
-            print(f"found task {task_name}")
-        else:
-            print(f"there is no task named {task_name}")
+    def update(self, task_id):
+        for task in self.tasks["tasks"]:
+            if task_id == task["id"]:
+                while True:
+                    print("leave blank to skip")
+                    new_name = input("new name: ")
+                    new_status = input("new status: ")
 
-    def update(self, task_name):
-        if task_name in self.tasks: 
-            while True:
-                print("Update Menu")
-                print(" | ".join(self.statuses))
-
-                update_command = input("update menu: ").lower()
-
-                if any(command == update_command for command in self.statuses):
-                    if update_command == "exit":
-                        print("exiting the update menu")
-
-                        return -1
-                    else:
-                        for task in self.tasks[task_name]:
-                            if task["status"] != update_command:
-                                task["status"] = update_command
-
+                    if new_name is not None:
+                        task["name"] = new_name
+                        
+                    if new_status != "":
+                            if new_status in self.statuses:
+                                task["status"] = new_status
+                                
                                 self._write()
-                                return True
-                            
-                        print(f"All tasks have the status {update_command}")
-                        return -1
-                else:
-                    print("unknown command try again")
-        else:
-            print('task not found')
-            
-            return -1
+
+                                print(f"successfully updated task with id {task_id}")
+
+                                return 1
+                            else:
+                                print("invalid status try again")
 
     def _id(self):
-        for task_name, task_list in self.tasks.items():
-            for index, task in enumerate(task_list):
-                task["id"] = index + 1
-                print(index, task)
+        for index, task in enumerate(self.tasks["tasks"]):
+            task["id"] = index + 1
 
         self._write()
+
+    def _setup(self):
+        with open(self.path, "r") as file_to_read:  
+            self.tasks = json.load(file_to_read)
+
+        if "tasks" not in self.tasks:
+            self.tasks["tasks"] = list()
         
     def _write(self):
         with open(self.path, "w") as file_to_write:
@@ -79,7 +75,11 @@ class Logic:
 
 class CLI:
     def __init__(self):
-        menu_options = ["add", "update", "delete", "search", "exit"]
+        idless_menu_options = ["add", "exit"]
+        menu_options = idless_menu_options
+
+        menu_command = None
+        task_id = None
 
         print("Welcome to Task Tracker CLI")
 
@@ -87,21 +87,23 @@ class CLI:
             print("Main Menu")
             print("Menu Options:", " | ".join(menu_options))
             
-            input_command = input("menu command: ").lower()
+            menu_command = input("menu command: ").lower()
 
-            if input_command == "exit":
+            if menu_command not in menu_options:
+                print("menu command must be in the list of menu options please try again")
+
+                continue
+            elif menu_command != "exit":
+                if menu_command in idless_menu_options:
+                    getattr(logic, menu_command)()
+                else:
+                    task_id = int(input("task id: "))
+
+                    getattr(logic, menu_command)(task_id)
+            else:
                 print("exiting the app")
 
                 return
-            
-            if any(command == input_command for command in menu_options):      
-                task_name = input("enter the task name: ")
-                
-                getattr(logic, input_command)(task_name)    
-            else:
-                print("invalid menu input try again")
-
-                continue
 
 logic = Logic()
 cli = CLI()
