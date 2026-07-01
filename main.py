@@ -1,6 +1,6 @@
+import os
 import json
 import pathlib
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,21 +9,20 @@ database = os.getenv("DATABASE")
 
 class Logic:
     def __init__(self):
-        self.path = pathlib.Path(__file__).parent.joinpath(database)
-        self.statuses = ["done", "in-progress", "exit"]
         self.tasks = dict()
+        
+        if pathlib.Path(database).exists():
+            with open(database, "r") as file:
+                self.tasks = json.load(file)
+        else:
+            pathlib.Path(database).open("w").write(r"{}")
 
-        try:
-            with open(self.path, "r") as file_to_read:  
-                self.tasks = json.load(file_to_read)
-        except FileNotFoundError:
-            print("invalid file path", f"created a new empty json file")
-
-        if "tasks" not in self.tasks:
-            self.tasks["tasks"] = list()
+        if "task_list" not in self.tasks:
+            self.tasks["task_list"] = []
+            self._write()
 
     def add(self):
-        task_name = input("task name: ")
+        task_name = input("task name\n")
         
         self._setup()
 
@@ -63,15 +62,15 @@ class Logic:
         self._write()
 
     def _setup(self):
-        with open(self.path, "r") as file_to_read:  
+        with open(database, "r") as file_to_read:  
             self.tasks = json.load(file_to_read)
 
         if "tasks" not in self.tasks:
             self.tasks["tasks"] = list()
         
     def _write(self):
-        with open(self.path, "w") as file_to_write:
-            json.dump(self.tasks, file_to_write, indent = 4)
+        with open(database, "w") as database_file:
+            json.dump(self.tasks, database_file, indent = 4)
 
 class CLI:
     def __init__(self):
